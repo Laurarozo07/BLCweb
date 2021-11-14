@@ -32,20 +32,26 @@ export class UsuariosComponent implements OnInit {
       let email = $("#inp_emailNew").val();
       let user = $("#inp_userNew").val();
       let password = $("#inp_passwordNew").val();
+
+      if(userExist(document)){
+        ShowMessage("el usuario ya se encuentra registrado ","#message")
+      }else{
+        
+        if(ValidTextField(document) 
+        && ValidTextField(name)
+        && ValidTextField(email)
+        && ValidTextField(user) 
+        && ValidTextField(password)){
+          saveUsuer(document, name, email, user, password);
+        }else{
+          
+          ShowMessage("<strong>Informacion Invalida!</strong>"+
+          "Los campos son incorrectos o estan en blanco","#message")
+        }
+      }
       
       // compreba los valores
 
-      if(ValidTextField(document) 
-      && ValidTextField(name) 
-      && ValidTextField(email)
-      && ValidTextField(user) 
-      && ValidTextField(password)){
-        saveUsuer(document, name, email, user, password);
-      }else{
-        
-        ShowMessage("<strong>Informacion Invalida!</strong>"+
-        "Los campos son incorrectos o estan en blanco","#message")
-      }
     })
 
     $("#btn_buscar").on("click",() => {
@@ -89,16 +95,42 @@ export class UsuariosComponent implements OnInit {
 
     //---------- comporbar campos -------------------------
 
+    /**
+     * valida que el texto cumpla con unas caracteristicas 
+     * @param text texto a validar
+     * @param lengthMin cantidad minima de caracteres
+     * @param lengthMax cantidad maxima de caracteres
+     * @returns true si el texto esta correcto
+     */
+
     function ValidTextField(text:any, lengthMin:number =3, lengthMax:number = 25) {
       if (text == "" || text == undefined || text.length < lengthMin || text.length > lengthMax) return false
       else return true;
 
     }
+    // ---------- validar usuario -----------------------
+    function userExist(document: any) {
+      let exists = false
+      for (var i = 0; i < usersList.length; i++) {
+            if( document == usersList[i].cedula_usuario){
+                exists = true
+                break
+            }
+        }
+        return exists
+    }
 
     //---------- mensajes ----------------------
+    /**
+     * muestra una alerta en la pagina
+     * @param text el texto que se va a mostrar en el mensaje
+     * @param location el id de la etiqueta html en la que se va a mostrar el mensaje
+     * @param alertType el estilo de alerta de bootstrap [alert-primary, alert-secondary, alert-success, 
+     * alert-danger, alert-warning, alert-info, alert-light, alert-dark]
+     */
 
-    function ShowMessage(text:string, location:string) {
-      let message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">'+
+    function ShowMessage(text:string, location:string, alertType:string="alert-warning") {
+      let message = '<div class="alert '+alertType+' alert-dismissible fade show" role="alert">'+
         text+ // aqui esta el mensaje
         '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
       '</div>'
@@ -194,6 +226,15 @@ export class UsuariosComponent implements OnInit {
       })
     }
     //------------------- actualizar usuario ------------------------
+    /**
+     * se encarga de actualizar a los usuarios registrados en la base de datos 
+     * @param document 
+     * @param newName 
+     * @param newEmail 
+     * @param newUser 
+     * @param newPassword 
+     * @returns 
+     */
     function updateUsuer(document: any , newName: any, newEmail: any, newUser: any, newPassword: any){
       return new Promise<void>(() => {
 

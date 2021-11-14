@@ -36,22 +36,27 @@ export class ClientesComponent implements OnInit {
       let Ctelephone = $("#inp_telephoneNew").val();
       let Cemail = $("#inp_emailNew").val();
 
+      if (ClientExist(Cdocument)){
+          ShowMessage("el usuario ya se encuentra registrado","#message")
+      }else{
+        if (
+          // compreba los valores
+          ValidTextField(Cdocument)
+          && ValidTextField(Cname)
+          && ValidTextField(Caddress)
+          && ValidTextField(Ctelephone)
+          && ValidTextField(Cemail)
+        ) {
+          saveClient(Cdocument, Cname, Caddress, Ctelephone, Cemail);
+        } else {
+  
+          ShowMessage("<strong>Informacion Invalida!</strong>" +
+            "Los campos son incorrectos o estan en blanco", "#message","alert-danger")
+        }
 
-      // compreba los valores
-
-      if (
-        ValidTextField(Cdocument)
-        && ValidTextField(Cname)
-        && ValidTextField(Caddress)
-        && ValidTextField(Ctelephone)
-        && ValidTextField(Cemail)
-      ) {
-        saveClient(Cdocument, Cname, Caddress, Ctelephone, Cemail);
-      } else {
-
-        ShowMessage("<strong>Informacion Invalida!</strong>" +
-          "Los campos son incorrectos o estan en blanco", "#message")
       }
+      
+     
     })
 
     $("#btn_eliminar").on("click",() => {
@@ -76,7 +81,7 @@ export class ClientesComponent implements OnInit {
       && ValidTextField(email)){
         updateUsuer(document, name, address ,telephone, email)
       }else{
-        ShowMessage("los campos son incorrectos o estan vacios ","#messageEdit")
+        ShowMessage("los campos son incorrectos o estan vacios ","#messageEdit","alert-danger")
       }
 
     })
@@ -84,13 +89,21 @@ export class ClientesComponent implements OnInit {
     // ------------- funciones ----------------------------------------------------
 
     //---------------- mensajes ----------------
-    function ShowMessage(text: string, location: string) {
-      let message = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-        text + // aqui esta el mensaje
-        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-        '</div>'
-      $(location).html(message)
-      setTimeout(() => { $(location).html('') }, 5000)
+   /**
+     * muestra una alerta en la pagina
+     * @param text el texto que se va a mostrar en el mensaje
+     * @param location el id de la etiqueta html en la que se va a mostrar el mensaje
+     * @param alertType el estilo de alerta de bootstrap [alert-primary, alert-secondary, alert-success, 
+     * alert-danger, alert-warning, alert-info, alert-light, alert-dark]
+     */
+
+    function ShowMessage(text:string, location:string, alertType:string="alert-warning") {
+      let message = '<div class="alert '+alertType+' alert-dismissible fade show" role="alert">'+
+        text+ // aqui esta el mensaje
+        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
+      '</div>'
+        $(location).html(message)
+        setTimeout(() => {$(location).html('')},5000)
     }
     //---------- comporbar campos -------------------------
 
@@ -100,6 +113,16 @@ export class ClientesComponent implements OnInit {
 
     }
 
+    function ClientExist(document: any) {
+      let exists = false
+      for (var i = 0; i < clientsList.length; i++) {
+            if( document == clientsList[i].cedula_clientes){
+                exists = true
+                break
+            }
+        }
+        return exists
+    }
 
     //------------- buscar --------------------------------
     function searchClient(document: any) {
@@ -181,6 +204,7 @@ export class ClientesComponent implements OnInit {
     function saveClient(newDocument: any, newName: any, newAddress: any, newTelephone: any, newEmail: any) {
       return new Promise<void>(() => {
 
+
         fetch(URLHost + "/api/clientes/guardar/", {
           method: 'POST',
           headers: {
@@ -195,7 +219,7 @@ export class ClientesComponent implements OnInit {
           })
         }).then(() => {
           UpdateList()
-          ShowMessage("Usuario creado","#message")
+          ShowMessage("Usuario creado","#message","alert-success")
         })
 
       })
@@ -229,7 +253,7 @@ export class ClientesComponent implements OnInit {
  
       });
      }
-
+     // --------------------- actualizar clientes --------------------
      function updateUsuer(document: any , newName: any, newAddress: any, newTelephone: any, newEmail: any){
       return new Promise<void>(() => {
 
