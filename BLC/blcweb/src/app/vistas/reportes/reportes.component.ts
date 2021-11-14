@@ -10,7 +10,9 @@ export class ReportesComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    $("#mensajeNav").html("Conectado <strong>Bogotá</strong>")
+  
+    $("#mensajeNav").html('<i class="fas fa-wifi"></i></i>Conectado a <strong>Bogotá</strong>')
+    
   }
 
 }

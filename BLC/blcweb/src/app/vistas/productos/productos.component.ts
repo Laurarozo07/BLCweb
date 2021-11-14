@@ -10,7 +10,9 @@ export class ProductosComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    $("#mensajeNav").html("Conectado <strong>Cali</strong>")
+    
+    $("#mensajeNav").html('<i class="fas fa-wifi"></i></i>Conectado a <strong>Cali</strong>')
+    
   }
 
 }

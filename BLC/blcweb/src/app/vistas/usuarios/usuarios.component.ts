@@ -14,7 +14,7 @@ export class UsuariosComponent implements OnInit {
     const URLHost = "http://localhost:8082"
     let usersList: any;
 
-    $("#mensajeNav").html("Conectado <strong>Medellín</strong>")
+    $("#mensajeNav").html('<i class="fas fa-wifi"></i></i>Conectado a <strong>Medellín</strong>')
     UpdateList()
 
     //----- ocultar las opciones de editar y eliminar
@@ -105,7 +105,7 @@ export class UsuariosComponent implements OnInit {
         $(location).html(message)
         setTimeout(() => {$(location).html('')},5000)
     }
-    // -------- eliminar estudiantes -----------------------------
+    // -------- eliminar usuarios -----------------------------
 
     function deleteUser(document: any){
      return new Promise(() => {
@@ -124,13 +124,12 @@ export class UsuariosComponent implements OnInit {
       fetch(URLHost + "/api/usuarios/eliminar/" + idUser, {
         method: 'DELETE',
       }).then(() => {
-        getUsers()
-        let message = '<div class="alert alert-warning alert-dismissible fade show" role="alert">'+
-        '<strong>Se ha eliminado!</strong>'+
-        'El usuario '+nameUser+ // aqui esta el mensaje
-        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
-      '</div>'
-        $("#Form_user").html(message)
+        $("#Form_user").html('')
+        ShowMessage('<strong>Se ha eliminado!</strong>El usuario '+nameUser,'#messageEdit')
+        $("#btn_eliminar").hide()
+        $("#btn_editar").hide()
+        UpdateList()
+
       })
 
      });
@@ -189,6 +188,7 @@ export class UsuariosComponent implements OnInit {
           "password":String(newPassword)})
         }).then(() => {
           UpdateList()
+          ShowMessage("Usuario creado","#message")
         })
 
       })
@@ -218,11 +218,7 @@ export class UsuariosComponent implements OnInit {
           "password":String(newPassword)})
         }).then(() => {
           UpdateList()
-          let message = '<div class="alert alert-warning alert-dismissible fade show" role="alert">'+
-        '<strong>Se ha actualizado el Usuario</strong>'+
-        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
-      '</div>'
-        $("#Form_user").html(message)
+          ShowMessage("<strong>Se ha actualizado el Usuario</strong>","#Form_user")
         })
 
       })
