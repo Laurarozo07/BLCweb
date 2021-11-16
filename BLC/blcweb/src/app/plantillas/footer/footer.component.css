@@ -5,6 +5,12 @@
 
 h2 {
     color: #eee;
+    padding-left: 250px;
+    font-family: 'Roboto', sans-serif;
+}
+
+ul {
+    list-style-type: none;
 }
 
 .img_footer {

@@ -192,7 +192,7 @@ export class ClientesComponent implements OnInit {
               salida = salida + '</tr>';
 
             }
-            salida = salida + "<tbody></table>";
+            salida = salida + "</div>";
             $("#tbClient").html(salida);
           }
         ));
